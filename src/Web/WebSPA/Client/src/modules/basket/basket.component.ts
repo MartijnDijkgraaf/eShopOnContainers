@@ -18,10 +18,10 @@ export class BasketComponent implements OnInit {
     basket: IBasket;
     totalPrice: number = 0;
 
-    constructor(private basketSerive: BasketService, private router: Router, private basketWrapperService: BasketWrapperService) { }
+    constructor(private basketService: BasketService, private router: Router, private basketWrapperService: BasketWrapperService) { }
 
     ngOnInit() {
-        this.basketSerive.getBasket().subscribe(basket => {
+        this.basketService.getBasket().subscribe(basket => {
             this.basket = basket;
             this.calculateTotalPrice();
         });
@@ -31,9 +31,9 @@ export class BasketComponent implements OnInit {
         this.basket.items = this.basket.items.filter(item => item.id !== id);
         this.calculateTotalPrice();
         
-        this.basketSerive.setBasket(this.basket).subscribe(x => 
+        this.basketService.setBasket(this.basket).subscribe(x => 
             {
-                this.basketSerive.updateQuantity();
+                this.basketService.updateQuantity();
                 console.log('basket updated: ' + x)
             }
         );
@@ -42,11 +42,11 @@ export class BasketComponent implements OnInit {
     itemQuantityChanged(item: IBasketItem, quantity: number) {
         item.quantity = quantity > 0 ? quantity : 1;
         this.calculateTotalPrice();
-        this.basketSerive.setBasket(this.basket).subscribe(x => console.log('basket updated: ' + x));
+        this.basketService.setBasket(this.basket).subscribe(x => console.log('basket updated: ' + x));
     }
 
     update(event: any): Observable<boolean> {
-        let setBasketObservable = this.basketSerive.setBasket(this.basket);
+        let setBasketObservable = this.basketService.setBasket(this.basket);
         setBasketObservable
             .subscribe(
             x => {
